@@ -1,0 +1,29 @@
+<launch>
+
+	<node name="stereo_alignment_tool" pkg="stereo_alignment" type="align.py" output="screen">
+		<param name="cross_hair_color" value="blue"/>
+		<param name="line_width" value="2"/>
+		<param name="line_length" value="20"/>
+		<!--remap from="left_camera/image_raw" to="left_camera_color/image_raw"/>
+		<remap from="right_camera/image_raw" to="right_camera_color/image_raw"/-->
+		<remap from="left_camera/image_raw" to="left_camera_color/image_raw"/>
+		<remap from="right_camera/image_raw" to="right_camera_color/image_raw"/>
+	</node>
+
+	<arg name="vehicle_name" default="pinocchio"/>
+
+	<node name="debayer_nodelet_manager" pkg="nodelet" type="nodelet" args="manager"/>
+
+	<node name="left_debayer" pkg="nodelet" type="nodelet" args="load image_proc/debayer debayer_nodelet_manager">
+		<remap from="image_raw" to="$(arg vehicle_name)/left_camera/image_raw"/>
+		<remap from="image_color" to="left_camera_color/image_raw"/>
+		<remap from="image_mono" to="left_camera_mono/image_raw"/>
+	</node>
+
+	<node name="right_debayer" pkg="nodelet" type="nodelet" args="load image_proc/debayer debayer_nodelet_manager">
+		<remap from="image_raw" to="$(arg vehicle_name)/right_camera/image_raw"/>
+		<remap from="image_color" to="right_camera_color/image_raw"/>
+		<remap from="image_mono" to="right_camera_mono/image_raw"/>
+	</node>
+
+</launch>
