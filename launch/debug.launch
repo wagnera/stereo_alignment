@@ -10,7 +10,7 @@
 		<remap from="right_camera/image_raw" to="right_camera_color/image_raw"/>
 	</node>
 
-	<!--arg name="vehicle_name" default="pinocchio"/>
+	<arg name="vehicle_name" default="pinocchio"/>
 
 	<node name="debayer_nodelet_manager" pkg="nodelet" type="nodelet" args="manager"/>
 
@@ -24,6 +24,6 @@
 		<remap from="image_raw" to="$(arg vehicle_name)/right_camera/image_raw"/>
 		<remap from="image_color" to="right_camera_color/image_raw"/>
 		<remap from="image_mono" to="right_camera_mono/image_raw"/>
-	</node-->
+	</node>
 
 </launch>
