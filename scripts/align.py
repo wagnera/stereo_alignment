@@ -15,7 +15,8 @@ class stereo_align:
 		self.line_length = rospy.get_param("~line_length")
 		image_subL = message_filters.Subscriber('left_camera/image_raw', Image)
 		image_subR = message_filters.Subscriber('right_camera/image_raw', Image)
-		ts = message_filters.TimeSynchronizer([image_subL, image_subR], 10)
+		ts = message_filters.ApproximateTimeSynchronizer([image_subL, image_subR], 10, 0.1, allow_headerless=True)
+		#ts = message_filters.TimeSynchronizer([image_subL, image_subR], 10)
 		ts.registerCallback(self.img_callback)
 		self.img_pub=rospy.Publisher("image_out",Image, queue_size=10)
 		self.bridge = CvBridge()
@@ -43,9 +44,14 @@ class stereo_align:
 		cv2.line(left_image,(center[0],center[1]-self.line_length),(center[0],center[1]+self.line_length),self.line_color,self.line_width)
 		cv2.line(right_image,(center[0]-self.line_length,center[1]),(center[0]+self.line_length,center[1]),self.line_color,self.line_width)
 		cv2.line(right_image,(center[0],center[1]-self.line_length),(center[0],center[1]+self.line_length),self.line_color,self.line_width)
-		combined=np.empty((h,w*2,c),dtype=np.uint8)
-		combined[:,:w,:]=left_image
-		combined[:,w:,:]=right_image
+		if (True): #zoom
+			combined=np.empty((h,w*2,c),dtype=np.uint8)
+			combined[:,:w,:]=left_image
+			combined[:,w:,:]=right_image
+		else:
+			combined=np.empty((h/2,w,c),dtype=np.uint8)
+			combined[:,:w/2,:]=left_image[h/4:3*h/4,w/4:3*w/4]
+			combined[:,w/2:,:]=right_image[h/4:3*h/4,w/4:3*w/4]
 
 		vis_img=self.bridge.cv2_to_imgmsg(combined,'bgr8')
 		self.img_pub.publish(vis_img)
