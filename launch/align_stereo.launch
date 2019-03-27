@@ -1,11 +1,12 @@
 <launch>
 
 	<node name="stereo_alignment_tool" pkg="stereo_alignment" type="align.py" output="screen">
-		<param name="cross_hair_color" value="blue"/>
-		<param name="line_width" value="2"/>
-		<param name="line_length" value="30"/>
-		<remap from="left_camera/image_raw" to="left_camera_color/image_raw"/>
-		<remap from="right_camera/image_raw" to="right_camera_color/image_raw"/>
+		<param name="cross_hair_color" value="red"/>
+		<param name="line_width" value="1"/>
+		<param name="line_length" value="15"/>
+		<remap from="left_camera/image_raw" to="/pinocchio/left_camera/image_color"/>
+		<remap from="right_camera/image_raw" to="/pinocchio/right_camera/image_color"/>
+		<remap from="image_out" to="/pinocchio/stereo_calib_image"/>
 	</node>
 
 </launch>
